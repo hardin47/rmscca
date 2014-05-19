@@ -33,6 +33,8 @@ build.B <- function(k,p,q, Btype){
         }
       }
     }
+
+# for Btype == 2 we need to think about a bigger matrix to test
     
     if(Btype==2)  {}
     
