@@ -1,25 +1,12 @@
 sim.setup.noise.suped <- function(n.obs, B, contamination,var.cor,noisetype, Btype=1, SDX=1){
-
-  epsilon.val=.01
-  edim=25
-
-  library(rrcov)
-  library(MASS)
-  library(mixstock)
   
-  source("Final_funcs/Hardin_Rand_Cov_Func.R")
-  source("Final_funcs/sample.sigma12.function.R")
-  source("Final_funcs/bic.function.R")
-  source("Final_funcs/scca.function.R")
-  source("Final_funcs/scca.multiple.R")
-  source("Final_funcs/select.parameters.multiple.R")
-  source("Final_funcs/randCov_suped.R")
+  source("Final_funcs/Cov_suped.R")
   
   p <- dim(B)[1]
   q <- dim(B)[2]
   
 if(noisetype == "clean"){
-  Sigma.g = randCov.suped(p,epsilon.val = epsilon.val,edim = edim,cor.level = var.cor, which.matrix = 'G', Btype, SDX)
+  Sigma.g = Cov.suped(p,cor.level = var.cor, which.matrix = 'G', Btype, SDX)
   
   G <- mvrnorm(n.obs,rep(0,p), Sigma.g)
   mu <- matrix(rep(0,n.obs*q),nrow=n.obs,ncol=q)
@@ -28,7 +15,7 @@ if(noisetype == "clean"){
   }
   
   #need to find reasonable parameters for this
-  Sigma.y <- randCov.suped(matdim = q,epsilon.val = epsilon.val, edim = edim, cor.level = var.cor, which.matrix = 'Y',Btype, SDX)
+  Sigma.y <- Cov.suped(matdim = q, cor.level = var.cor, which.matrix = 'Y',Btype, SDX)
   
   Y.pheno <-list()
   length(Y.pheno) <-q
@@ -44,7 +31,7 @@ if(noisetype == "clean"){
 if(noisetype=="t"){
 
   tdf = 1
-  Sigma.g = randCov.suped(p,epsilon.val = epsilon.val, edim = edim, cor.level = var.cor, which.matrix = 'G', Btype, SDX)
+  Sigma.g = Cov.suped(p, cor.level = var.cor, which.matrix = 'G', Btype, SDX)
 
   G <- mvrnorm(n.obs,rep(0,p), Sigma.g)/sqrt(rchisq(n.obs,tdf)/tdf)
   mu <- matrix(rep(0,n.obs*q),nrow=n.obs,ncol=q)
@@ -53,7 +40,7 @@ if(noisetype=="t"){
   }
 
   #need to find reasonable parameters for this
-  Sigma.y <- randCov.suped(matdim = q,epsilon.val = epsilon.val, edim = edim, cor.level = var.cor, which.matrix = 'Y', Btype, SDX)
+  Sigma.y <- Cov.suped(matdim = q, cor.level = var.cor, which.matrix = 'Y', Btype, SDX)
 
   Y.pheno <-list()
   length(Y.pheno) <-q
@@ -68,10 +55,10 @@ if(noisetype=="t"){
 
 if(noisetype=="sym"){
 
-  Sigma.g = randCov.suped(p,epsilon.val = epsilon.val, edim = edim, cor.level = var.cor, which.matrix = 'G', Btype, SDX)
+  Sigma.g = Cov.suped(p, cor.level = var.cor, which.matrix = 'G', Btype, SDX)
 
   #need to find reasonable parameters for this
-  Sigma.y <- randCov.suped(matdim = q,epsilon.val = epsilon.val, edim = edim, cor.level = var.cor, which.matrix = 'Y', Btype, SDX)
+  Sigma.y <- Cov.suped(matdim = q, cor.level = var.cor, which.matrix = 'Y', Btype, SDX)
 
   G.clean = mvrnorm(n.obs, rep(0,p), Sigma.g)
 
@@ -103,7 +90,7 @@ if(noisetype=="sym"){
 
 if(noisetype=="asym"){
 
-  Sigma.g = randCov.suped(p,epsilon.val = epsilon.val, edim = edim, cor.level = var.cor, which.matrix = 'G', Btype, SDX)
+  Sigma.g = Cov.suped(p,  cor.level = var.cor, which.matrix = 'G', Btype, SDX)
 
   num.noise <- n.obs*contamination
   num.clean <- n.obs*(1-contamination)
@@ -124,7 +111,7 @@ if(noisetype=="asym"){
   }
 
   #need to find reasonable parameters for this
-  Sigma.y <- randCov.suped(matdim = q,epsilon.val = epsilon.val, edim = edim, cor.level = var.cor, which.matrix = 'Y', Btype, SDX)
+  Sigma.y <- Cov.suped(matdim = q,  cor.level = var.cor, which.matrix = 'Y', Btype, SDX)
 
   outliers <- ourorder[ourorder<=num.noise]
   nonoutliers <- ourorder[ourorder>num.noise]
