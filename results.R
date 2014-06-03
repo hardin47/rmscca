@@ -9,27 +9,19 @@ results <- function(res, B.mat, bic){
   true <- determine.true.vals(B.mat)
   groups <- true$groups
   full.group = numeric(length(groups))
-  #now two options
-  if(bic ==T){
-    all.coefs <- rbind(abs(rbind(res$bic.coef.u,res$bic.coef.v)))
-    cor.vals <- res$bic.cor
-    cor.order <- order(abs(res$bic.cor),decreasing =T)
-  }else{
-    all.coefs <- rbind(abs(rbind(res$nobic.coef.u,res$nobic.coef.v)))
-    cor.vals <- res$nobic.cor
-    cor.order <- order(abs(res$nobic.cor),decreasing =T)
-  }
-  
-  num.pairs = dim(all.coefs)[2]
-  num.vars = dim(all.coefs)[1]
-  
-  
-  nonzero = list()
-  length(nonzero) = num.pairs
-  for(i in 1:num.pairs){
-    nonzero[[i]] = which(all.coefs[,i]>.00001)
-  }
+  num.pairs = min(dim(B.mat))
 
+
+  # get results from SCCA and CCA
+    sp.coefs <- rbind(abs(rbind(res$sp.coef.u,res$sp.coef.v)))
+    sp.cor.vals <- res$sp.cor
+    sp.cor.order <- order(abs(res$sp.cor),decreasing =T)
+  
+  sp.nonzero = list()
+  length(sp.nonzero) = num.pairs
+  for(i in 1:num.pairs){
+    sp.nonzero[[i]] = which(abs(sp.coefs[,i])>.00001)
+  }
   
   
   
@@ -39,29 +31,26 @@ results <- function(res, B.mat, bic){
   
   #Creates a summary table for each canonical pair
   big <- data.frame(nrow = num.pairs, ncol = 9)
-  true.vals <- c()
+  sp.true.vals <- c()
   for(i in 1:num.pairs){
-    UTP = length(which(true$all%in%nonzero[[cor.order[i]]]))
-    UFP = length(which(!nonzero[[cor.order[i]]]%in%true$all))
-    pos <- true$all[which(true$all.vars%in%nonzero[[cor.order[i]]])]
-    true.vals <- c(true.vals, pos)
-    true.vals <- sort(unique(true.vals))
-    UFN <- length(true$all) - length(true.vals)
-    big[i,1] = complete.groups(groups,nonzero[[cor.order[i]]])
-    big[i,2] = UTP
-    big[i,3] = UFP
-    big[i,4] = UTP+UFP
-    big[i,5] = UTP/UFP
-    big[i,6] = paste(pos,collapse = ",")
-    big[i,7] = UFN
-    big[i,8] = round(cor.vals[cor.order[i]],3)
-    big[i,9] = cor.order[i]
-  }
-  for(i in 1:num.pairs){
-    
+    sp.UTP = length(which(true$all%in%sp.nonzero[[sp.cor.order[i]]]))
+    sp.UFP = length(which(!sp.nonzero[[sp.cor.order[i]]]%in%true$all))
+    sp.pos <- true$all[which(true$all.vars%in%sp.nonzero[[sp.cor.order[i]]])]
+    sp.true.vals <- sort(unique(c(sp.true.vals, sp.pos)))
+    sp.UFN <- length(true$all) - length(sp.true.vals)
+    big[i,1] = complete.groups(groups,sp.nonzero[[sp.cor.order[i]]])
+    big[i,2] = sp.UTP
+    big[i,3] = sp.UFP
+    big[i,4] = sp.UTP+sp.UFP
+    big[i,5] = sp.UTP/sp.UFP
+    big[i,6] = paste(sp.pos,collapse = ",")
+    big[i,7] = sp.UFN
+    big[i,8] = round(sp.cor.vals[sp.cor.order[i]],3)
+    big[i,9] = sp.cor.order[i]
   }
 
-  names(big) <- c("Complete_Groups", "Num_True_Pos", "Num_False_Pos","Num_Total_Pos", "Ratio_TP/FP", "True_Pos_Values","Num_False_Neg", "Correlation", "Cor.Order")
+
+  names(big) <- c("sp.Complete_Groups", "sp.Num_True_Pos", "sp.Num_False_Pos","sp.Num_Total_Pos", "sp.Ratio_TP/FP", "sp.True_Pos_Values","sp.Num_False_Neg", "sp.Correlation", "sp.Cor.Order")
 #  big <- big[order(abs(big$Correlation), decreasing = T),]
 
     

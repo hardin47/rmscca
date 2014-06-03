@@ -35,7 +35,7 @@ select.parameters.multiple <- function(x.data, y.data, bound = 2, n.cv = 5, d.ve
     
     k <- sample.sigma12.function(x.data[training.sample, ], y.data[training.sample, ], robust=rob.p)
     
-    #Calculating the residual matrix
+    #Calculating the residual matrix  (note that for the (count)th pair, we remove (count-1) pieces of information)
     if(count>1){
       for(l in 2:count){
         k <- k - d.vec[l-1]*u.list[[l-1]]%*%t(v.list[[l-1]])
