@@ -61,6 +61,7 @@ interpret.results.curve <- function(output, sp.permcors){
   
 # Num_False_Pos measures the number of false positives in a particular canonical pair
 # Avg.FP averages the number of false positives over the canonical pairs of interest
+# average is taken over the set of canonical pairs
   if(!is.na(sp.cutoff.val) & sp.cutoff.val > 1) {
   sp.Avg.FP.Perm <- mean(sp.output.perm$sp.Num_False_Pos[!is.na(sp.output.perm$sp.Correlation)], na.rm=T)  }else{
 	sp.Avg.FP.Perm = NA  }
