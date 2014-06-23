@@ -33,13 +33,15 @@ if(Btype==1){
 }
 
 
-if(Btype==2){  # needs to be fixed
+if(Btype==2){ 
   if(which.matrix=='X'){
-    D.XX <- as.matrix(bdiag(matrix(cor.level,12,12), matrix(cor.level,8,8), matrix(cor.level,12,12),
-	         	matrix(0,matdim-8-12-12,matdim-8-12-12)))
+  D.XX <- as.matrix(bdiag(matrix(cor.level,10,10),matrix(cor.level,5,5), matrix(cor.level,20,20),
+		matrix(cor.level,50,50), matrix(cor.level,15,15),
+		matrix(0,matdim-10-5-20-50-15,matdim-10-5-20-50-15)))
   }else{
-    D.XX <- as.matrix(bdiag(matrix(cor.level,8,8), matrix(cor.level,4,4), matrix(cor.level,4,4),
-			matrix(0,matdim-8-4-4,matdim-8-4-4)))
+    D.XX <- as.matrix(bdiag(matrix(cor.level,20,20),matrix(cor.level,5,5), matrix(cor.level,10,10),
+		matrix(cor.level,50,50), matrix(cor.level,15,15),
+		matrix(0,matdim-20-5-10-50-15,matdim-20-5-10-50-15)))
   }
 }
   
