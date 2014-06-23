@@ -1,4 +1,3 @@
-
 date()
 
 library(foreach)
@@ -22,13 +21,13 @@ source("Final_funcs/select.parameters.multiple.R")
 source("Final_funcs/bic.function.R")
 source("Final_funcs/scca.function.R")
 source("Final_funcs/scca.multiple.R")
-source("Final_funcs/select.parameters.multiple.R")
+
 
 start <- date()
 start <- strptime(start, "%a %b %d %H:%M:%S %Y")
 
 ##  We first set the parameters for running in parallel as well as the 
-##  population parameter set-up
+##   population parameter set-up
 
 num.cluster1 = 25
 num.runs1 = 4*num.cluster1
@@ -45,7 +44,7 @@ num.obs = 100
 cor.suped = .3
 noise.level = 0.1
 noise = "sym"
-# options are clean, t, sym, and asym  (with sym and asym you need noise.level)
+# Options are clean, t, sym, and asym  (with sym and asym you need noise.level)
 # t uses df=3, we might want a lower df? 1?
 
 
@@ -56,7 +55,7 @@ cutoff.perc = 0.99
 cor.val.cutoff = 0.4
 
 setup = sim.setup.noise.suped(num.obs, B, contamination=noise.level, var.cor=cor.suped, noisetype = noise, Btype=Btype)
-G = setup$X
+X = setup$X
 Y = setup$Y
 
 run1 <- list()
@@ -74,8 +73,8 @@ perm.results.sim <- foreach(i=1:num.runs1, .combine='cbind') %dopar%{
 
   Yperm = Y[sample(1:num.obs, replace=F),]
 
-  res.s <- scca.multiple(G, Yperm, rob = T, bic=F)#, fullsig=F) #Here bic=T means compute bic as well as nobic
-  res.p <- scca.multiple(G, Yperm, rob = F, bic=F)#, fullsig=F)
+  res.s <- scca.multiple(X, Yperm, rob = T, bic=F)#, fullsig=F) #Here bic=T means compute bic as well as nobic
+  res.p <- scca.multiple(X, Yperm, rob = F, bic=F)#, fullsig=F)
 
 #  c(res.s$nobic.cor, res.s$bic.cor, res.p$nobic.cor, res.p$bic.cor)
    c(res.s$nobic.cor, res.p$nobic.cor)
@@ -121,10 +120,10 @@ registerDoParallel(c2)
 sim.results <- foreach(i=1:num.runs2, .combine='rbind') %dopar%{
 
   setup <- sim.setup.noise.suped(num.obs,B,contamination = noise.level, var.cor  = cor.suped, noisetype=noise, Btype=Btype)
-  G <- setup$X
+  X <- setup$X
   Y <- setup$Y
-  res.s <- scca.multiple(G,Y, rob = T, bic=F) #Here bic=T means compute bic as well as nobic
-  res.p <- scca.multiple(G,Y, rob = F, bic=F)
+  res.s <- scca.multiple(X,Y, rob = T, bic=F) #Here bic=T means compute bic as well as nobic
+  res.p <- scca.multiple(X,Y, rob = F, bic=F)
   
 
   output.s.nobic <- results(res.s, B, bic=F)
