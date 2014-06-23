@@ -52,7 +52,7 @@ v.initial[[1]] <- v.initial.first /sqrt(as.numeric(t(v.initial.first)%*%v.initia
 # Use CV to select parameters if either is set to 0
 # The select.parameters.multiple function finds the best lambda values for the given X and Y
 if(lambda.u[1] == 0 | lambda.v[1] == 0){
-  parameters <- select.parameters.multiple(X,Y, bound = 2, count = 1, rob.p = rob)
+  parameters <- select.parameters.multiple(X,Y, bound = 1 count = 1, rob.p = rob)
   lambda.u[1] <- parameters$lambda.u[1]
   lambda.v[1] <- parameters$lambda.v[1]
 }
@@ -108,7 +108,7 @@ for(i in 2:minpq){
   # To figure out lambda.u and lambda.v, we run SCCA on training and test data and keep the lambda
   # values which maximize the correlations.  Then we enter the lambda values into scca.function on the
   # entire dataset.  
-  parameters <- select.parameters.multiple(X,Y, bound = 2,n.cv = 5, d.vec = d,u.list =  sp.coefs.u.list, v.list =  sp.coefs.v.list, count = i, rob.p = rob)
+  parameters <- select.parameters.multiple(X,Y, bound = 1,n.cv = 5, d.vec = d,u.list =  sp.coefs.u.list, v.list =  sp.coefs.v.list, count = i, rob.p = rob)
   lambda.u[i] <- parameters$lambda.u[1]
   lambda.v[i] <- parameters$lambda.v[1]
 
