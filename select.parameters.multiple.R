@@ -5,8 +5,8 @@ select.parameters.multiple <- function(X, Y, bound = 2, n.cv = 5, d.vec, u.list,
 # Calls sample.sigma12.function() & scca.function
 
 
-lambda.v.seq <- seq(0, bound, by=0.02)  # Possible values of sparseness parameters for data Y. Lower bounds should be 0, upper bound can be increased to 2.
-lambda.u.seq <- seq(0, bound, by=0.02)  # Possible values of sparseness parameters for data X. Lower bounds should be 0, upper bound can be increased to 2.
+lambda.v.seq <- seq(0, bound, by=0.1)  # Possible values of sparseness parameters for data Y. Lower bounds should be 0, upper bound can be increased to 2.
+lambda.u.seq <- seq(0, bound, by=0.1)  # Possible values of sparseness parameters for data X. Lower bounds should be 0, upper bound can be increased to 2.
 
 n.lambdas.v <-  length(lambda.v.seq) 	# Number of possible sparseness parameters for data Y.
 n.lambdas.u <-  length(lambda.u.seq)	# Number of possible sparseness parameters for data X.
