@@ -5,6 +5,7 @@ sim.setup.noise.suped <- function(n.obs, B, contamination, var.cor, noisetype, B
 # Called by big_sim_cutoff.R
 # Calls Cov.suped
 # source("Final_funcs/Cov_suped.R")
+# library(MASS)
   
 p = dim(B)[1]
 q = dim(B)[2]
@@ -80,42 +81,32 @@ if(noisetype=="sym"){
 
 if(noisetype=="asym"){
 
-  Sigma.g = Cov.suped(p,  cor.level = var.cor, which.matrix = 'X', Btype, SDX)
+  Sigma.x = Cov.suped(p, cor.level = var.cor, which.matrix = 'X', Btype, SDX)
+  Sigma.y = Cov.suped(matdim = q, cor.level = var.cor, which.matrix = 'Y', Btype, SDX)
 
   num.noise <- n.obs*contamination
   num.clean <- n.obs*(1-contamination)
 
-  G1 <- jitter(matrix(rep(mean(diag(Sigma.g)),num.noise*p), ncol=p))
-  G2 <- mvrnorm(num.clean, rep(0,p), Sigma.g)
-  G.clean <- rbind(G1,G2)
+  X1 <- jitter(matrix(mean(diag(Sigma.x),num.noise,p))  # noise
+  X2 <- mvrnorm(num.clean, rep(0,p), Sigma.x)		# clean
+  X.full <- rbind(X1,X2)				# full
 
-  ourorder <- sample(nrow(G.clean))
-
-  G.clean <- G.clean[ourorder,]
-
-  G.clean <- matrix(unlist(G.clean),nrow = n.obs, byrow =T)
-
-  mu <- matrix(rep(0,n.obs*q),nrow=n.obs,ncol=q)
-  for (i in 1:n.obs){
-    mu[i,] <- G.clean[i,]%*%B
-  }
-
-  #need to find reasonable parameters for this
-  Sigma.y <- Cov.suped(matdim = q,  cor.level = var.cor, which.matrix = 'Y', Btype, SDX)
+  ourorder <- sample(nrow(X.clean))
+  X.full <- X.full[ourorder,]				# scramble the order of noise
+ 
+  mu = X.full%*%B
 
   outliers <- ourorder[ourorder<=num.noise]
   nonoutliers <- ourorder[ourorder>num.noise]
 
-  Y.pheno <-list()
-  length(Y.pheno) <-q
+  Y.pheno = matrix(ncol=q, nrow=n.obs)
   for(i in outliers){
-      Y.pheno[[i]] <- rep(sum(diag(Sigma.y)), q)
+      Y.pheno[i,] <- jitter(rep(sum(diag(Sigma.y)), q))
      }
   for(i in nonoutliers){
-      Y.pheno[[i]] <- mvrnorm(1,mu[i,], Sigma.y)
+      Y.pheno[i,] <- mvrnorm(1,mu[i,], Sigma.y)
   }
-  Y.pheno <- matrix(unlist(Y.pheno),nrow = n.obs, byrow =T)
-  return(list(X = G.clean, Y = Y.pheno))
+  return(list(X = X.full, Y = Y.pheno))
 
 }
 
