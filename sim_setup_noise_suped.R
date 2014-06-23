@@ -1,24 +1,28 @@
-sim.setup.noise.suped <- function(n.obs, B, contamination,var.cor,noisetype, Btype=1, SDX=1){
+## Simulates the data to test ##
+
+sim.setup.noise.suped <- function(n.obs, B, contamination, var.cor, noisetype, Btype=1, SDX=1){
+# Called by big_sim_cutoff.R
+# Calls Cov.suped
   
-  source("Final_funcs/Cov_suped.R")
+source("Final_funcs/Cov_suped.R")
   
-  p <- dim(B)[1]
-  q <- dim(B)[2]
+p <- dim(B)[1]
+q <- dim(B)[2]
   
 if(noisetype == "clean"){
-  Sigma.g = Cov.suped(p,cor.level = var.cor, which.matrix = 'G', Btype, SDX)
+  Sigma.g = Cov.suped(p,cor.level = var.cor, which.matrix = 'G', Btype, SDX)	#Create X covariance matrix
   
-  G <- mvrnorm(n.obs,rep(0,p), Sigma.g)
-  mu <- matrix(rep(0,n.obs*q),nrow=n.obs,ncol=q)
-  for (i in 1:n.obs){
-    mu[i,] <- G[i,]%*%B
-  }
+  G <- mvrnorm(n.obs,rep(0,p), Sigma.g)		#Produces n.obs samples from multivariate distibrution
+						# with means 0 and covariance matrix Sigma.g
+  mu <- matrix(0,nrow=n.obs,ncol=q)
+  mu <- G%*%B
   
-  #need to find reasonable parameters for this
-  Sigma.y <- Cov.suped(matdim = q, cor.level = var.cor, which.matrix = 'Y',Btype, SDX)
-  
+  # Need to find reasonable parameters for this.
+  Sigma.y <- Cov.suped(q, cor.level = var.cor, which.matrix = 'Y',Btype, SDX)	#Create Y covariance matrix
+
   Y.pheno <-list()
   length(Y.pheno) <-q
+
   for(i in 1:n.obs){
       Y.pheno[[i]] <- mvrnorm(1,mu[i,], Sigma.y)
     }
