@@ -52,7 +52,7 @@ v.initial[[1]] <- v.initial.first /sqrt(as.numeric(t(v.initial.first)%*%v.initia
 # Use CV to select parameters if either is set to 0
 # The select.parameters.multiple function finds the best lambda values for the given X and Y
 if(lambda.u[1] == 0 | lambda.v[1] == 0){
-  parameters <- select.parameters.multiple(X,Y, bound = 1 count = 1, rob.p = rob)
+  parameters <- select.parameters.multiple(X,Y, bound = 1, count = 1, rob.p = rob)
   lambda.u[1] <- parameters$lambda.u[1]
   lambda.v[1] <- parameters$lambda.v[1]
 }
