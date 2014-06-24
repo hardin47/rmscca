@@ -68,7 +68,7 @@ if(noisetype=="sym"){
 
   for(i in 1:n.obs){
   	if(runif(1) < contamination){
-		    X[i,] = runif(p, 3*mins.G, 3*maxes.G)
+		    X[i,] = runif(p, 3*mins.X, 3*maxes.X)
 		    Y.pheno[i,] = runif(q, 3*mins.Y, 3*maxes.Y)
 		    }
 	}
@@ -87,11 +87,11 @@ if(noisetype=="asym"){
   num.noise <- n.obs*contamination
   num.clean <- n.obs*(1-contamination)
 
-  X1 <- jitter(matrix(mean(diag(Sigma.x),num.noise,p))  # noise
+  X1 <- jitter(matrix(mean(diag(Sigma.x)),num.noise,p))  # noise
   X2 <- mvrnorm(num.clean, rep(0,p), Sigma.x)		# clean
   X.full <- rbind(X1,X2)				# full
 
-  ourorder <- sample(nrow(X.clean))
+  ourorder <- sample(nrow(X.full))
   X.full <- X.full[ourorder,]				# scramble the order of noise
  
   mu = X.full%*%B
