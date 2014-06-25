@@ -12,11 +12,11 @@ interpret.results.curve <- function(output, sp.permcors){
 #### SPARSE CCA ####
 ####################
 
-# In cutoff.val, the correlation for each canonical pair is used.  The permuted corrleations are considered
+# In sp.cutoff.val, the correlation for each canonical pair is used.  The permuted corrleations are considered
 # to be a null cutoff value for each of the correlations (first, second, third, etc.) within the same dataset.
 # Each dataset will have its own cutoff value (as opposed to using one correlation across all datasets).
   sp.cutoff.val = ifelse(sp.permcors[1]<output$sp.Correlation[1], ifelse(sum(sp.permcors < output$sp.Correlation, na.rm=T) == sum(!is.na(output$sp.Correlation)), sum(!is.na(output$sp.Correlation)), min(which(sp.permcors > output$sp.Correlation)) - 1), NA)
-  if(!is.na(cutoff.val)) {
+  if(!is.na(sp.cutoff.val)) {
 	sp.output.perm <- output[1:sp.cutoff.val,]   }else{
 	sp.output.perm <- NA}
   
@@ -50,7 +50,7 @@ interpret.results.curve <- function(output, sp.permcors){
   sp.FDR.Perm <- 1-sp.TP.Percent.Perm
 
 # Average correlation of the paris we keep  
-  if(!is.na(cutoff.val) & cutoff.val > 1) {
+  if(!is.na(sp.cutoff.val) & sp.cutoff.val > 1) {
   sp.Avg.Cor.Perm <- mean(abs(sp.output.perm$sp.Correlation), na.rm=T)  }else{
 	sp.Avg.Cor.Perm = NA  }
   
