@@ -19,7 +19,15 @@ if(Btype==0){
   }else{
     D.XX <- as.matrix(bdiag(matrix(cor.level,3,3), matrix(cor.level,2,2), matrix(0,matdim-3-2,matdim-3-2)))
   }
+if(which.matrix=='X'){
+	sd.XX = rep(1,matdim)     #(matdim x 1) standard deviation vector
+  }else{   
+	sd.XX = sqrt(c(rep(4,2), rep(7,3), rep(1,matdim-3-2)))	
+	}
 }
+
+# note:  the value for the variance of Y is: var.cor*pX^2 + var.cor*px + 1
+# where px is the number of X variables contributing to Y (here 2 and 3 respectively)
 
 
 if(Btype==1){
@@ -30,6 +38,11 @@ if(Btype==1){
     D.XX <- as.matrix(bdiag(matrix(cor.level,8,8), matrix(cor.level,4,4), matrix(cor.level,4,4),
 			matrix(0,matdim-8-4-4,matdim-8-4-4)))	
   }
+if(which.matrix=='X'){
+	sd.XX = rep(1,matdim)     #(matdim x 1) standard deviation vector
+  }else{   
+	sd.XX = sqrt(c(rep(79,8), rep(37,4), rep(79,4), rep(1,matdim-8-4-4)))	
+	}
 }
 
 
@@ -43,6 +56,11 @@ if(Btype==2){
 		matrix(cor.level,50,50), matrix(cor.level,15,15),
 		matrix(0,matdim-20-5-10-50-15,matdim-20-5-10-50-15)))
   }
+if(which.matrix=='X'){
+	sd.XX = rep(1,matdim)     #(matdim x 1) standard deviation vector
+  }else{   
+	sd.XX = sqrt(c(rep(56,20), rep(16,5), rep(211,10), rep(1276,50), rep(121,15), rep(1,matdim-20-5-10-50-15)))	
+	}
 }
   
 diag(D.XX) <- 1		#Each entry of diagonal of D.XX set equal to 1.
@@ -50,10 +68,6 @@ diag(D.XX) <- 1		#Each entry of diagonal of D.XX set equal to 1.
 # D.XX now created
 
   
-sd.XX = rnorm(matdim, SDX, 1)	#(matdim x 1) standard deviation vector
-
-
-# I don’t know how you want to come up with the variances on the diagonal…  Make sure they are all positive.
 
 # Pre- and post- multiply D.XX by a standard deviation vector to get a 
 #  covariance matrix instead of a correlation matrix.
