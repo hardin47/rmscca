@@ -5,6 +5,7 @@ select.parameters.multiple <- function(X, Y, bound = 2, n.cv = 5, d.vec, u.list,
 # Calls sample.sigma12.function() & scca.function
 
 
+
 lambda.v.seq <- seq(0, bound, by=0.1)  # Possible values of sparseness parameters for data Y. Lower bounds should be 0, upper bound can be increased to 2.
 lambda.u.seq <- seq(0, bound, by=0.1)  # Possible values of sparseness parameters for data X. Lower bounds should be 0, upper bound can be increased to 2.
 
@@ -101,9 +102,9 @@ for (i.cv in 1:n.cv) 	# n.cv is number of cross-validations
 
       # Calculate predicted correlation for SCCA
       if(rob.p == T){
-        predict.corr.scca[j.lambda.u, j.lambda.v] <- predict.corr.scca[j.lambda.u, j.lambda.v] + abs(cor(x.predict%*%uj, y.predict%*%vj, method = "spearman"))
+        predict.corr.scca[j.lambda.u, j.lambda.v] <- predict.corr.scca[j.lambda.u, j.lambda.v] + (cor(x.predict%*%uj, y.predict%*%vj, method = "spearman"))
       }else{
-        predict.corr.scca[j.lambda.u, j.lambda.v] <- predict.corr.scca[j.lambda.u, j.lambda.v] + abs(cor(x.predict%*%uj, y.predict%*%vj, method = "pearson"))
+        predict.corr.scca[j.lambda.u, j.lambda.v] <- predict.corr.scca[j.lambda.u, j.lambda.v] + (cor(x.predict%*%uj, y.predict%*%vj, method = "pearson"))
       }
 
       if(is.na(predict.corr.scca[j.lambda.u, j.lambda.v])) {  # close if
@@ -121,9 +122,8 @@ for (i.cv in 1:n.cv) 	# n.cv is number of cross-validations
 predict.corr.scca[is.na(predict.corr.scca)] <- 0
 predict.corr.scca <- predict.corr.scca/n.cv
 
-best.predict.corr.scca <- max(abs(predict.corr.scca), na.rm=T)
-best.lambda.v <- lambda.v.matrix[predict.corr.scca==best.predict.corr.scca]
-best.lambda.u <- lambda.u.matrix[predict.corr.scca==best.predict.corr.scca]
+best.lambda.v <- lambda.v.matrix[which(predict.corr.scca==max(predict.corr.scca,na.rm=T))]
+best.lambda.u <- lambda.u.matrix[which(predict.corr.scca==max(predict.corr.scca,na.rm=T))]
 
 return(list(best.cor = best.predict.corr.scca, lambda.v = best.lambda.v, lambda.u = best.lambda.u))
 

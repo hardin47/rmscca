@@ -20,9 +20,9 @@ if(Btype==0){
     D.XX <- as.matrix(bdiag(matrix(cor.level,3,3), matrix(cor.level,2,2), matrix(0,matdim-3-2,matdim-3-2)))
   }
 if(which.matrix=='X'){
-	sd.XX = rep(1,matdim)     #(matdim x 1) standard deviation vector
+	var.XX = rep(1,matdim)     #(matdim x 1) variance vector
   }else{   
-	sd.XX = sqrt(c(rep(4,2), rep(7,3), rep(1,matdim-3-2)))	
+	var.XX = c(rep(4,2), rep(7,3), rep(1,matdim-3-2))	
 	}
 }
 
@@ -39,9 +39,9 @@ if(Btype==1){
 			matrix(0,matdim-8-4-4,matdim-8-4-4)))	
   }
 if(which.matrix=='X'){
-	sd.XX = rep(1,matdim)     #(matdim x 1) standard deviation vector
+	var.XX = rep(1,matdim)     #(matdim x 1) variance vector
   }else{   
-	sd.XX = sqrt(c(rep(79,8), rep(37,4), rep(79,4), rep(1,matdim-8-4-4)))	
+	var.XX = c(rep(79,8), rep(37,4), rep(79,4), rep(1,matdim-8-4-4))	
 	}
 }
 
@@ -57,13 +57,14 @@ if(Btype==2){
 		matrix(0,matdim-20-5-10-50-15,matdim-20-5-10-50-15)))
   }
 if(which.matrix=='X'){
-	sd.XX = rep(1,matdim)     #(matdim x 1) standard deviation vector
+	var.XX = rep(1,matdim)     #(matdim x 1) variance vector
   }else{   
-	sd.XX = sqrt(c(rep(56,20), rep(16,5), rep(211,10), rep(1276,50), rep(121,15), rep(1,matdim-20-5-10-50-15)))	
+#	var.XX = c(rep(56,20), rep(16,5), rep(211,10), rep(1276,50), rep(121,15), rep(1,matdim-20-5-10-50-15))
+	var.XX = rep(1,matdim)
 	}
 }
   
-diag(D.XX) <- 1		#Each entry of diagonal of D.XX set equal to 1.
+diag(D.XX) <- var.XX		#Each entry of diagonal of D.XX set equal to 1.
 
 # D.XX now created
 
@@ -72,6 +73,7 @@ diag(D.XX) <- 1		#Each entry of diagonal of D.XX set equal to 1.
 # Pre- and post- multiply D.XX by a standard deviation vector to get a 
 #  covariance matrix instead of a correlation matrix.
 
-return(cov.XX = t( D.XX *  sd.XX) * sd.XX)
+#return(cov.XX = t( D.XX *  sd.XX) * sd.XX)
+return(cov.XX = D.XX)
 
 }

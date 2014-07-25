@@ -1,5 +1,5 @@
 
-results <- function(res, B.mat, bic){
+results <- function(res, B.mat, n.pair){
   # res are the results from scca.multiple  
 
   source("Final_funcs/result_helpers.R")
@@ -9,8 +9,8 @@ results <- function(res, B.mat, bic){
   true <- determine.true.vals(B.mat)
   groups <- true$groups
   full.group = numeric(length(groups))
-  num.pairs = min(dim(B.mat))
-
+#  num.pairs = min(dim(B.mat))
+  num.pairs = n.pair
 
   # get results from SCCA and CCA
     sp.coefs <- rbind(abs(rbind(res$sp.coef.u,res$sp.coef.v)))

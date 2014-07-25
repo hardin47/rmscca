@@ -1,6 +1,6 @@
 ## Runs SCCA for one canonical pair ##
 
-scca.function <- function(k, u.initial, v.initial, lambda.u, lambda.v,gamma = 1) {
+scca.function <- function(k, u.initial, v.initial, lambda.u, lambda.v) {
 
 # Called by scca.multiple.R & select.multiple.parameters.R
 # Calls no other rmscca functions
