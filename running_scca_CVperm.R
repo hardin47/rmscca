@@ -29,15 +29,15 @@ start <- strptime(start, "%a %b %d %H:%M:%S %Y")
 ##  We first set the parameters for running in parallel as well as the 
 ##  population parameter set-up
 
-num.cluster1 = 2
-num.runs1 = 1*num.cluster1
+num.cluster1 = 25
+num.runs1 = 4*num.cluster1
 
 k = 1
-p = 10
-q = 15
-Btype = 0
-num.obs = 10
-n.pair = 2
+p = 500
+q = 1000
+Btype = 2
+num.obs = 100
+n.pair = 5  # should be at least 10
 nperm=100
 
 # cutoff.perc tells where to cutoff for permutation values
@@ -61,7 +61,7 @@ registerDoParallel(c1)
 
 ##  This loop runs the entire simulation in parallel for each dataset.
 
-perm.results.sim <- foreach(i=1:num.runs1, .combine='cbind') %dopar%{
+results.sim <- foreach(i=1:num.runs1, .combine='rbind') %dopar%{
 
 library(MASS)
 
@@ -69,9 +69,7 @@ simdata = sim.setup.noise.suped(num.obs, B, contamination=noise.level, var.cor=c
 sim.output = scca.CVperm(simdata, n.pair, nperm)
 
 
-# need to check all of this!!
-# dimension, quantiles, sorting, etc.
-
+# using the permuted correlations to create a curve to determine significance cutoffs
 perm.cor.s = sim.output$perm.cor.s
 perm.cor.s = apply(t(perm.cor.s), 1, sort, decreasing=T)
 perm.s.curve = apply(perm.cor.s, 2, quantile, probs=cutoff.perc)
@@ -80,6 +78,8 @@ perm.cor.p = sim.output$perm.cor.p
 perm.cor.p = apply(t(perm.cor.p), 1, sort, decreasing=T)
 perm.p.curve = apply(perm.cor.p, 2, quantile, probs=cutoff.perc)
 
+
+# mapping new output to the same form as the previous output
 res.s = list()
 res.s$sp.coef.u = data.frame(matrix(unlist(sim.output$alphas.s), nrow=length(sim.output$alphas.s[[1]]), byrow=F))
 res.s$sp.coef.v = data.frame(matrix(unlist(sim.output$betas.s), nrow=length(sim.output$betas.s[[1]]), byrow=F))
@@ -90,21 +90,21 @@ res.p$sp.coef.u = data.frame(matrix(unlist(sim.output$alphas.p), nrow=length(sim
 res.p$sp.coef.v = data.frame(matrix(unlist(sim.output$betas.p), nrow=length(sim.output$betas.p[[1]]), byrow=F))
 res.p$sp.cor = sim.output$cor.test.p
 
+
+# counting false positives, false negatives, etc.
 output.s <- results(res.s, B, n.pair)
 output.p <- results(res.p, B, n.pair)
 
-
-# Is this the output?  Should it be rbind or c?  What do we want to save?
- rbind( interpret.results.curve(output.s, perm.s.curve ),
-       interpret.results.curve(output.p, perm.p.curve))
+c( interpret.results.curve(output.s, perm.s.curve ),
+       interpret.results.curve(output.p, perm.p.curve), sim.output$lambda1.s, sim.output$lambda1.p)
 
 
 # c(output.jo$cor.test.s, output.jo$perm.cor.s, output.jo$cor.all.s)
 
 }  
 
-fname = paste("Gabecors",Btype,".n",num.obs,".p",p,".q",q,".",noise,".txt",sep="")
-write.table(perm.results.sim, file=fname, row.names=F, quote=F, col.names=F, sep="\t")    
+fname = paste("simB",Btype,".n",num.obs,".p",p,".q",q,".",noise,".txt",sep="")
+write.table(results.sim, file=fname, row.names=F, quote=F, col.names=F, sep="\t")    
 
 end1 <- date()
 end1 <- strptime(end1, "%a %b %d %H:%M:%S %Y")
