@@ -50,7 +50,7 @@ results <- function(res, B.mat, n.pair){
   }
 
 
-  names(big) <- c("sp.Complete_Groups", "sp.Num_True_Pos", "sp.Num_False_Pos","sp.Num_Total_Pos", "sp.Ratio_TP/FP", "sp.True_Pos_Values","sp.Num_False_Neg", "sp.Correlation", "sp.Cor.Order")
+  names(big) <- c("sp.Complete_Groups","sp.Num_True_Pos", "sp.Num_False_Pos","sp.Num_Total_Pos", "sp.Ratio_TP/FP", "sp.True_Pos_Values","sp.Num_False_Neg", "sp.Correlation", "sp.Cor.Order")
 #  big <- big[order(abs(big$Correlation), decreasing = T),]
 
     

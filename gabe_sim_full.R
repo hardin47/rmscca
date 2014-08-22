@@ -30,7 +30,7 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
     
     lambda.u <- numeric(n.pair)
     lambda.v <- numeric(n.pair)
-    lambda.seq <- c(0,1,.1)
+    lambda.seq <- c(0,2,.01)
     sp.coefs.u.list <- list()
     sp.coefs.v.list <- list()
     sp.coef.u <- c()
@@ -58,7 +58,7 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
         results <- list()
         for (i.fold in 1:n.fold) {
           results.temp <- c()
-          results[[i.fold]] <- matrix(0, nrow=121, ncol=4)
+          results[[i.fold]] <- matrix(0, nrow=length(lambda.seq)^2, ncol=4)
           test <- perm[ (1 + (i.fold - 1) * n.hold.out) : (i.fold * n.hold.out)]
           test.X <- X[test, ]
           test.Y <- Y[test, ]
@@ -114,6 +114,9 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
         uv.full <- scca.function(k[[i.pair]], u.initial, v.initial, best.lambdas[1], best.lambdas[2])
         alphas[[i.pair]] <- uv.full$u.new
         betas[[i.pair]] <- uv.full$v.new  #these alphas and betas will be used on the folded data 
+
+	if(i.pair==1 & rob==T){lambda1.s = best.lambdas}
+	if(i.pair==1 & rob==F){lambda1.p = best.lambdas}
       } # finish i.pair
     } # finish i.perm
     
@@ -233,8 +236,8 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
     
   } # finish robust loop
   
-    return(list(lam.s=best.lam.save.s, cor.test.s=best.cor.s, perm.cor.s=best.cor.p.s, cor.all.s=cor.all.s, 
-                alphas.s=alphas.s, betas.s=betas.s, lam.p=best.lam.save.p, cor.test.p=best.cor.pears, 
+    return(list(lam.s=best.lam.save.s, lambda1.s = lambda1.s, cor.test.s=best.cor.s, perm.cor.s=best.cor.p.s, cor.all.s=cor.all.s, 
+                alphas.s=alphas.s, betas.s=betas.s, lam.p=best.lam.save.p, lambda1.p = lambda1.p, cor.test.p=best.cor.pears, 
                 perm.cor.p=best.cor.p.p, cor.all.p=cor.all.p, alphas.p=alphas.p, betas.p=betas.p))
     
 } # end of function
