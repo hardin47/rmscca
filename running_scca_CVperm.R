@@ -22,6 +22,7 @@ source("Final_funcs/select.parameters.multiple.R")
 source("Final_funcs/scca.function.R")
 source("Final_funcs/scca.multiple.R")
 source("Final_funcs/gabe_sim_full.R")
+source("Final_funcs/Cov_suped.R")
 
 start <- date()
 start <- strptime(start, "%a %b %d %H:%M:%S %Y")
@@ -37,7 +38,7 @@ p = 500
 q = 1000
 Btype = 2
 num.obs = 100
-n.pair = 5  # should be at least 10
+n.pair = 10  # should be at least 10
 nperm=100
 
 # cutoff.perc tells where to cutoff for permutation values
