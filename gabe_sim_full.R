@@ -30,7 +30,7 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
     
     lambda.u <- numeric(n.pair)
     lambda.v <- numeric(n.pair)
-    lambda.seq <- c(0,2,.01)
+    lambda.seq <- seq(0,.5,.1)
     sp.coefs.u.list <- list()
     sp.coefs.v.list <- list()
     sp.coef.u <- c()

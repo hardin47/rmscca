@@ -37,18 +37,18 @@ k = 1
 p = 500
 q = 1000
 Btype = 2
-num.obs = 100
-n.pair = 10  # should be at least 10
+num.obs = 500
+n.pair = 2  # should be at least 10
 nperm=100
 
 # cutoff.perc tells where to cutoff for permutation values
 cutoff.perc = 0.9
 
-cor.suped = .2
-noise.level = 0.1
-noise = "clean"
-# options are clean, t, sym, and asym  (with sym and asym you need noise.level)
-# t uses df=1, we might want a lower df? 1?
+cor.suped = .2		# the cor of internal X and internal Y
+noise.level = 0.1	# the amount (percent) of contaimation
+noise = "noise"
+# options are clean, t, sym, and asym  (with t, sym, and asym you need noise.level)
+# t uses df=2, we might want a lower df? 1?
 
 
 B <- build.B(k,p,q,Btype)
