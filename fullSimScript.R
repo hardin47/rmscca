@@ -1,28 +1,23 @@
 
-# to run: R CMD BATCH running_scca_CVperm.R & 
+# to run: R CMD BATCH fullSimScript.R & 
 
 date()
 
 library(foreach)
 library(doParallel)
-library(Matrix)
-library(MASS)
-library(mixstock)
 
 
-source("Final_funcs/results.R")
-source("Final_funcs/interpret_results_curveonly.R")
 source("Final_funcs/build_B.R")
-source("Final_funcs/determine_true_vals.R")
-source("Final_funcs/sim_setup_noise_suped.R")
+source("Final_funcs/sim_setup.R")
+source("Final_funcs/Cov_suped.R")
+source("Final_funcs/sample_sigma12_function.R")
+source("Final_funcs/scca_function.R")
+source("Final_funcs/scca_CVperm.R")
+
 source("Final_funcs/result_helpers.R")
 source("Final_funcs/determine_true_vals.R")
-source("Final_funcs/sample.sigma12.function.R")
-source("Final_funcs/select.parameters.multiple.R")
-source("Final_funcs/scca.function.R")
-source("Final_funcs/scca.multiple.R")
-source("Final_funcs/gabe_sim_full.R")
-source("Final_funcs/Cov_suped.R")
+source("Final_funcs/results.R")
+source("Final_funcs/interpret_results_curveonly.R")
 
 start <- date()
 start <- strptime(start, "%a %b %d %H:%M:%S %Y")
@@ -38,15 +33,14 @@ p = 500
 q = 1000
 Btype = 2
 num.obs = 500
-n.pair = 2  # should be at least 10
+n.pair = 10  # should be at least 10
 nperm=100
 
 # cutoff.perc tells where to cutoff for permutation values
 cutoff.perc = 0.9
 
 cor.suped = .2		# the cor of internal X and internal Y
-noise.level = 0.1	# the amount (percent) of contaimation
-noise = "noise"
+noise = "clean"
 # options are clean, t, sym, and asym  (with t, sym, and asym you need noise.level)
 # t uses df=2, we might want a lower df? 1?
 
@@ -64,9 +58,9 @@ registerDoParallel(c1)
 
 results.sim <- foreach(i=1:num.runs1, .combine='rbind') %dopar%{
 
-library(MASS)
+library(mvnfast)
 
-simdata = sim.setup.noise.suped(num.obs, B, contamination=noise.level, var.cor=cor.suped, noisetype = noise, Btype=Btype)
+simdata = sim.setup(num.obs, B, var.cor=cor.suped, noisetype = noise, Btype=Btype)
 sim.output = scca.CVperm(simdata, n.pair, nperm)
 
 
@@ -99,12 +93,9 @@ output.p <- results(res.p, B, n.pair)
 c( interpret.results.curve(output.s, perm.s.curve ),
        interpret.results.curve(output.p, perm.p.curve), sim.output$lambda1.s, sim.output$lambda1.p)
 
-
-# c(output.jo$cor.test.s, output.jo$perm.cor.s, output.jo$cor.all.s)
-
 }  
 
-fname = paste("simB",Btype,".n",num.obs,".p",p,".q",q,".",noise,".txt",sep="")
+fname = paste("secondsimB",Btype,".n",num.obs,".p",p,".q",q,".",noise,".txt",sep="")
 write.table(results.sim, file=fname, row.names=F, quote=F, col.names=F, sep="\t")    
 
 end1 <- date()

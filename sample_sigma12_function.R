@@ -1,6 +1,6 @@
 ## Takes X and Y data  and estimates the covariance matrix. ##
 
-sample.sigma12.function <- function(X, Y, robust = T) {
+sample.sigma12.function <- function(X, Y, robust = TRUE) {
 # Takes X and Y data  and estimates the covariance matrix.
 # Called by scca.multiple & select.parameters.multiple.R
 # Calls no other rmscca functions
@@ -22,7 +22,7 @@ diag(sigma22) = ifelse(diag(sigma22)==0, 1, diag(sigma22))
 X <- X %*% diag( 1/sqrt(diag(sigma11)) )	#Multiply X by normalized diagonal vector of sigma11
 Y <- Y %*% diag( 1/sqrt(diag(sigma22)) )	#Multiply Y by normalized diagonal vector of sigma22
   
-if(robust == T){
+if(robust == TRUE){
   return(cov(X,Y, method = "spearman"))
 
 }else{

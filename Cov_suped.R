@@ -2,7 +2,7 @@
 
 
 Cov.suped <- function(matdim, cor.level, which.matrix, Btype=1, SDX=5){
-# Called by sim.setup.noise.suped()
+# Called by sim.setup() and sim.setup.null()
 # Calls no other rmscca functions
 
 library(Matrix)
@@ -14,53 +14,65 @@ library(Matrix)
 #  For example, if x1 and x2 are in the same block of B, x1 and x2 will be correlated within the simulated data.
 
 if(Btype==0){
+    p.dims <- c(2, 3, matdim - 2 - 3)
+    q.dims <- c(3, 2, matdim - 3 - 2)
   if(which.matrix=='X'){
-    D.XX <- as.matrix(bdiag(matrix(cor.level,2,2), matrix(cor.level,3,3), matrix(0,matdim-2-3,matdim-2-3)))
+    D.XX <- as.matrix(bdiag(matrix(cor.level,p.dims[1],p.dims[1]), matrix(cor.level,p.dims[2],p.dims[2]), 
+		matrix(0,p.dims[3],p.dims[3])))
   }else{
-    D.XX <- as.matrix(bdiag(matrix(cor.level,3,3), matrix(cor.level,2,2), matrix(0,matdim-3-2,matdim-3-2)))
+    D.XX <- matrix(0, ncol=matdim, nrow=matdim)
   }
 if(which.matrix=='X'){
 	var.XX = rep(1,matdim)     #(matdim x 1) variance vector
   }else{   
-	var.XX = c(rep(4,2), rep(7,3), rep(1,matdim-3-2))	
+	var.XX = c(rep((1/cor.level - 1) * ((p.dims[1]^2 - p.dims[1]) * cor.level + p.dims[1]), q.dims[1]), 
+		rep((1/cor.level - 1) * ((p.dims[2]^2 - p.dims[2]) * cor.level + p.dims[2]), q.dims[2]), rep(1, q.dims[3]))	
 	}
 }
 
-# note:  the value for the variance of Y is: var.cor*pX^2 + var.cor*px + 1
+# note:  the value for the variance of Y is: cor.level*pX^2 + cor.level*px + 1
 # where px is the number of X variables contributing to Y (here 2 and 3 respectively)
 
 
 if(Btype==1){
+    p.dims <- c(12, 8, 12, matdim - 12 - 8 - 12)
+    q.dims <- c(8, 4, 4, matdim - 8 - 4 - 4)
   if(which.matrix=='X'){
-    D.XX <- as.matrix(bdiag(matrix(cor.level,12,12), matrix(cor.level,8,8), matrix(cor.level,12,12), 	
-	  	 	 matrix(0,matdim-8-12-12,matdim-8-12-12)))
+    D.XX <- as.matrix(bdiag(matrix(cor.level,p.dims[1],p.dims[1]), matrix(cor.level,p.dims[2],p.dims[2]), 
+		matrix(cor.level,p.dims[3],p.dims[3]), matrix(0,p.dims[4], p.dims[4])))
   }else{
-    D.XX <- as.matrix(bdiag(matrix(cor.level,8,8), matrix(cor.level,4,4), matrix(cor.level,4,4),
-			matrix(0,matdim-8-4-4,matdim-8-4-4)))	
+    D.XX <- matrix(0,ncol=matdim, nrow=matdim)	
   }
 if(which.matrix=='X'){
 	var.XX = rep(1,matdim)     #(matdim x 1) variance vector
   }else{   
-	var.XX = c(rep(79,8), rep(37,4), rep(79,4), rep(1,matdim-8-4-4))	
+	var.XX = c(rep((1/cor.level - 1) * ((p.dims[1]^2 - p.dims[1]) * cor.level + p.dims[1]), q.dims[1]), 
+		rep((1/cor.level - 1) * ((p.dims[2]^2 - p.dims[2]) * cor.level + p.dims[2]), q.dims[2]),
+		rep((1/cor.level - 1) * ((p.dims[3]^2 - p.dims[3]) * cor.level + p.dims[3]), q.dims[3]),
+		rep(1, q.dims[4]))
 	}
 }
 
 
 if(Btype==2){ 
+    p.dims <- c(10, 5, 20, 50, 15, matdim - 10 - 5 - 20 - 50 - 15)
+    q.dims <- c(20, 5, 10, 50, 15, matdim - 20 - 5 - 10 - 50 - 15)
   if(which.matrix=='X'){
-  D.XX <- as.matrix(bdiag(matrix(cor.level,10,10),matrix(cor.level,5,5), matrix(cor.level,20,20),
-		matrix(cor.level,50,50), matrix(cor.level,15,15),
-		matrix(0,matdim-10-5-20-50-15,matdim-10-5-20-50-15)))
+    D.XX <- as.matrix(bdiag(matrix(cor.level,p.dims[1],p.dims[1]), matrix(cor.level,p.dims[2],p.dims[2]), 
+		matrix(cor.level,p.dims[3],p.dims[3]), matrix(cor.level,p.dims[4],p.dims[4]),
+		matrix(cor.level,p.dims[5],p.dims[5]), matrix(0,p.dims[6], p.dims[6])))
   }else{
-    D.XX <- as.matrix(bdiag(matrix(cor.level,20,20),matrix(cor.level,5,5), matrix(cor.level,10,10),
-		matrix(cor.level,50,50), matrix(cor.level,15,15),
-		matrix(0,matdim-20-5-10-50-15,matdim-20-5-10-50-15)))
+    D.XX <- matrix(0,ncol=matdim, nrow=matdim)	
   }
 if(which.matrix=='X'){
 	var.XX = rep(1,matdim)     #(matdim x 1) variance vector
   }else{   
-#	var.XX = c(rep(56,20), rep(16,5), rep(211,10), rep(1276,50), rep(121,15), rep(1,matdim-20-5-10-50-15))
-	var.XX = rep(1,matdim)
+	var.XX = c(rep((1/cor.level - 1) * ((p.dims[1]^2 - p.dims[1]) * cor.level + p.dims[1]), q.dims[1]), 
+		rep((1/cor.level - 1) * ((p.dims[2]^2 - p.dims[2]) * cor.level + p.dims[2]), q.dims[2]),
+		rep((1/cor.level - 1) * ((p.dims[3]^2 - p.dims[3]) * cor.level + p.dims[3]), q.dims[3]),
+		rep((1/cor.level - 1) * ((p.dims[3]^2 - p.dims[4]) * cor.level + p.dims[4]), q.dims[4]),
+		rep((1/cor.level - 1) * ((p.dims[3]^2 - p.dims[5]) * cor.level + p.dims[5]), q.dims[5]),
+		rep(1, q.dims[6]))
 	}
 }
   

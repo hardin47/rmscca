@@ -3,7 +3,7 @@
 
 
 build.B <- function(k,p,q, Btype){
-# Called by big_sim_cutoff.R
+# Called by fullSimScript.R and nullSimScript.R
 # Calls no other rmscca functions
 
 B <- matrix(0,nrow = p, ncol = q)	#Create the initial pxq matrix, all elements 0.

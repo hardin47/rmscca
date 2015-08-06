@@ -2,7 +2,7 @@
 
 scca.function <- function(k, u.initial, v.initial, lambda.u, lambda.v) {
 
-# Called by scca.multiple.R & select.multiple.parameters.R
+# Called by scca.multiple.R & select.multiple.parameters.R & scca_CVperm
 # Calls no other rmscca functions
 
 i <- 0 		  # Number of iterations used by SCCA
@@ -23,7 +23,7 @@ while ((i < max.iter) & ((diff.u > eps) || (diff.v > eps)) ) {
   vx <- vx / length.vx					#
 
 
-  u.new <- abs(vx) - 0.5*lambda.u  #/svdu 		# Apply soft-thresholding to
+  u.new <- abs(vx) - 0.5*lambda.u        		# Apply soft-thresholding to
   u.new <- (u.new + abs(u.new))/2			# obtain u.new, a
   u.new <- u.new*sign(vx)				# sparse solution
 
@@ -41,7 +41,7 @@ while ((i < max.iter) & ((diff.u > eps) || (diff.v > eps)) ) {
   ux <- ux / length.ux					#
 
 
-  v.new <- abs(ux) - 0.5*lambda.v  #/svdvq		# Apply soft-thresholding to
+  v.new <- abs(ux) - 0.5*lambda.v       		# Apply soft-thresholding to
   v.new <- (v.new + abs(v.new))/2			# obtain v.new, a
   v.new <- v.new * sign(ux)				# sparse solution
 

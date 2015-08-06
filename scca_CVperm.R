@@ -3,6 +3,9 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
   # Computes cannonical correlations on both the true data and the permuted data
   # Calls sample.sigma12.function and scca.function
   #
+  # Is called by fullSimScript.R and nullSimScript.R and dataScript.R
+  #
+  #
   # Args: 
   #   data - a list containing an n x p matrix called X and an n x q matrix called Y
   #   n.pair - integer, number of canonical pairs to compute
@@ -25,7 +28,7 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
   minpq <- min(p,q)  
   Y.old <- Y  
   
-  rob.c = c(T, F)
+  rob.c = c(TRUE, FALSE)
   for (rob in rob.c){
     
     lambda.u <- numeric(n.pair)
@@ -85,7 +88,7 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
               x1 <- test.X %*% (var.root.X * uv$u.new)
               y1 <- y1 + (sum(y1 != 0) == 0) * seq(-1, 1, length.out=length(y1))
               x1 <- x1 + (sum(x1 != 0) == 0 ) * y1^2
-              if (rob==T){
+              if (rob==TRUE){
                 cor.temp1 <- cor(x1,y1, method="spearman")
               }else{ cor.temp1 <- cor(x1,y1, method="pearson")}
               results.temp <- rbind(c(i.fold, l.u, l.v, cor.temp1), results.temp)
@@ -115,8 +118,8 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
         alphas[[i.pair]] <- uv.full$u.new
         betas[[i.pair]] <- uv.full$v.new  #these alphas and betas will be used on the folded data 
 
-	if(i.pair==1 & rob==T){lambda1.s = best.lambdas}
-	if(i.pair==1 & rob==F){lambda1.p = best.lambdas}
+	if(i.pair==1 & rob==TRUE){lambda1.s = best.lambdas}
+	if(i.pair==1 & rob==FALSE){lambda1.p = best.lambdas}
       } # finish i.pair
     } # finish i.perm
     
@@ -158,7 +161,7 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
             x1 <- test.X %*% (var.root.X * uv$u.new)
             y1 <- y1 + (sum(y1 != 0) == 0) * seq(-1, 1, length.out=length(y1))
             x1 <- x1 + (sum(y1 != 0) == 0 ) * y1^2
-            if (rob==T){
+            if (rob==TRUE){
               cor.temp2 <- cor(x1,y1, method="spearman")
             }else{ cor.temp2 <- cor(x1,y1, method="pearson")}
             results.temp <- rbind(c(i.fold, l.u, l.v, cor.temp2), results.temp)
@@ -194,7 +197,7 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
           x1 <- X %*% (var.root.X * alphas[[i.pair]])
           y1 <- y1 + (sum(y1 != 0) == 0) * seq(-1, 1, length.out=length(y1))
           x1 <- x1 + (sum(x1 != 0) == 0 ) * y1^2
-          if (rob==T) {
+          if (rob==TRUE) {
             cor.temp <- cor(x1,y1, method="spearman")
           } else {  
             cor.temp <- cor(x1,y1, method="pearson")
@@ -212,18 +215,18 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
       x1 <- X %*% (var.root.X * alphas[[i.pair]])
       y1 <- y1 + (sum(y1 != 0) == 0) * seq(-1, 1, length.out=length(y1))
       x1 <- x1 + (sum(x1 != 0) == 0 ) * y1^2
-      if (rob==T){
+      if (rob==TRUE){
         cor.all[i.pair] <- cor(x1,y1, method="spearman")
       }else{ cor.all[i.pair] <- cor(x1,y1, method="pearson")}
     } # finish i.pair
     
-    if (rob==T){
-      best.lam.save.s = lam.fav
-      best.cor.s = best.cor
-      best.cor.p.s = best.cor.p
-      cor.all.s = cor.all
-      alphas.s = alphas
-      betas.s = betas
+    if (rob==TRUE){
+      best.lam.save.s = lam.fav # lambda on all data (gives very high cor)
+      best.cor.s = best.cor     # correlation using test/CV values
+      best.cor.p.s = best.cor.p # permutation correlations, to find Q-curve
+      cor.all.s = cor.all       # very high cor on *all* data w/o CV
+      alphas.s = alphas         # alphas on all data (gives very high cor)
+      betas.s = betas           # betas on all data (gives very high cor) 
     }else{
       best.lam.save.p = lam.fav
       best.cor.pears = best.cor
