@@ -70,8 +70,8 @@ if(which.matrix=='X'){
 	var.XX = c(rep((1/cor.level - 1) * ((p.dims[1]^2 - p.dims[1]) * cor.level + p.dims[1]), q.dims[1]), 
 		rep((1/cor.level - 1) * ((p.dims[2]^2 - p.dims[2]) * cor.level + p.dims[2]), q.dims[2]),
 		rep((1/cor.level - 1) * ((p.dims[3]^2 - p.dims[3]) * cor.level + p.dims[3]), q.dims[3]),
-		rep((1/cor.level - 1) * ((p.dims[3]^2 - p.dims[4]) * cor.level + p.dims[4]), q.dims[4]),
-		rep((1/cor.level - 1) * ((p.dims[3]^2 - p.dims[5]) * cor.level + p.dims[5]), q.dims[5]),
+		rep((1/cor.level - 1) * ((p.dims[4]^2 - p.dims[4]) * cor.level + p.dims[4]), q.dims[4]),
+		rep((1/cor.level - 1) * ((p.dims[5]^2 - p.dims[5]) * cor.level + p.dims[5]), q.dims[5]),
 		rep(1, q.dims[6]))
 	}
 }

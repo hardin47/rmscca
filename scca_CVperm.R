@@ -135,7 +135,7 @@ scca.CVperm <- function(data, n.pair, nperm=100) {
       results <- list()
       for (i.fold in 1:n.fold) {
         results.temp <- c()
-        results[[i.fold]] <- matrix(0, nrow=121, ncol=4)
+        results[[i.fold]] <- matrix(0, nrow=length(lambda.seq)^2, ncol=4)
         test <- perm[ (1 + (i.fold - 1) * n.hold.out) : (i.fold * n.hold.out)]
         test.X <- X[test, ]
         test.Y <- Y[test, ]
