@@ -62,11 +62,9 @@ sim.output = scca.CVperm(simdata, n.pair, nperm)
 
 # using the permuted correlations to create a curve to determine significance cutoffs
 perm.cor.s = sim.output$perm.cor.s
-perm.cor.s = apply(t(perm.cor.s), 1, sort, decreasing=TRUE)
 perm.s.curve = apply(perm.cor.s, 2, quantile, probs=cutoff.perc)
 
 perm.cor.p = sim.output$perm.cor.p
-perm.cor.p = apply(t(perm.cor.p), 1, sort, decreasing=TRUE)
 perm.p.curve = apply(perm.cor.p, 2, quantile, probs=cutoff.perc)
 
 
