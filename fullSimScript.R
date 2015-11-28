@@ -32,7 +32,7 @@ k = 1
 p = 500
 q = 1000
 Btype = 2
-num.obs = 500
+num.obs = 50
 n.pair = 10  # should be at least 10
 nperm=100
 
@@ -40,7 +40,7 @@ nperm=100
 cutoff.perc = 0.9
 
 cor.suped = .2		# the cor of internal X and internal Y
-noise = "clean"
+noise = "t"
 # options are clean, t, sym, and asym  (with t, sym, and asym you need noise.level)
 # t uses df=2, we might want a lower df? 1?
 

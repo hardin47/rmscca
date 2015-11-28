@@ -1,7 +1,9 @@
 rmscca
 ======
 
-robust multiple sparce canonical correlation analysis
+robust multiple sparce canonical correlation analysis 
+
+As described in the manuscript, **Robust Sparse Multiple Canonical Correlation** by J. Coleman, J. Replogle, G. Chandler and J. Hardin.  Available at http://arxiv.org/abs/1410.3355
 
 The functions needed in the analysis are the following:
 
@@ -38,6 +40,7 @@ Interpreting results
 
 # Null: nullSimScript.R
 	- generates null data with k=0 (i.e., B==0).  Only uses the first CC to determine if anything is called significant.
+    - type I error is calculated using null_results.R
 
 # Breast cancer data:  dataScript2.R (only chrom2)  dataScript.R (all chrom in parallel)
 	- Uses the .csv files from the PMA package.  
@@ -45,7 +48,8 @@ Interpreting results
 	- the output contains the list of coefficients and correlations for both spearman and pearson
 
 # Simulated data: fullSimScript.R
-	- I need to work through all the parsing scripts again.  But the basic idea is to simulate data, run the RMSCCA code, then count things like "complete groups", false positives, etc.
+	- Simulates data, runs the RMSCCA code, counts things like "complete groups", false positives, etc.  Output is as given by interpret_results_curveonly.R.  
+    - Data is parsed and plotted using plot_results.R.
 
 
 
